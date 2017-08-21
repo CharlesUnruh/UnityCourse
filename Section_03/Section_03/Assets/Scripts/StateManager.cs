@@ -116,26 +116,19 @@ public class StateManager : MonoBehaviour {
         const string Lock_Text = "Luckily you never travel without a hairpin, unluckily the face of the lock is on the other side of the bars.";
         const string Freedom_Text = "You've made it out of your cell!";
         State cell = new State(Cell_Text);
-        State sheets_0 = new State(Sheets_Text);
-        State sheets_1 = new State(Sheets_Text);
+        State sheets = new State(Sheets_Text);
         State mirror = new State(Mirror_Text);
-        State lock_0 = new State(Lock_Text);
-        State lock_1 = new State(Lock_Text);
-        State cell_mirror = new State(Cell_Text);
+        State lockedBars = new State(Lock_Text);
         State freedom = new State(Freedom_Text);
 
-        cell.SetCommand(KeyCode.S, sheets_0, "Look at the Sheets");
+        cell.SetCommand(KeyCode.S, sheets, "Look at the Sheets");
         cell.SetCommand(KeyCode.M, mirror, "Look at the Mirror");
-        cell.SetCommand(KeyCode.L, lock_0, "Look at the Lock");
-        sheets_0.SetCommand(KeyCode.R, cell, "Return to your Cell");
-        lock_0.SetCommand(KeyCode.R, cell, "Return to your Cell");
+        cell.SetCommand(KeyCode.L, lockedBars, "Look at the Lock");
+        sheets.SetCommand(KeyCode.R, cell, "Return to your Cell");
+        lockedBars.SetCommand(KeyCode.R, cell, "Return to your Cell");
+        lockedBars.SetCommand(KeyCode.O, freedom, "Open the lock with the Mirror", PlayerInventory.RemoveItem, Items.Mirror, Items.Mirror);
         mirror.SetCommand(KeyCode.R, cell, "Return to your Cell");
-        mirror.SetCommand(KeyCode.T, cell_mirror, "Take the Mirror and return to your cell", PlayerInventory.AddItem, Items.Mirror);
-        cell_mirror.SetCommand(KeyCode.S, sheets_1, "Look at the Sheets");
-        cell_mirror.SetCommand(KeyCode.L, lock_1, "Look at the Lock");
-        sheets_1.SetCommand(KeyCode.R, cell_mirror, "Return to your cell");
-        lock_1.SetCommand(KeyCode.R, cell_mirror, "Return to your cell");
-        lock_1.SetCommand(KeyCode.O, freedom, "Open the lock with the Mirror", PlayerInventory.RemoveItem, Items.Mirror, Items.Mirror );
+        mirror.SetCommand(KeyCode.T, cell, "Take the Mirror and return to your cell", PlayerInventory.AddItem, Items.Mirror);
         freedom.SetCommand(KeyCode.P, cell, "Play again");
 
         CurrentState = cell;
