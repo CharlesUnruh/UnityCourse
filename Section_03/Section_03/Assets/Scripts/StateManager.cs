@@ -28,6 +28,7 @@ public class State
     private Dictionary<KeyCode, Items> ItemsTable;
     public delegate void ModifyInventory(Items item);
     private Dictionary<KeyCode, ModifyInventory> ModificationTable;
+    private Dictionary<KeyCode, Items> RestrictionsTable;
 
 
     public State(string Description)
@@ -37,6 +38,7 @@ public class State
         ActionTable = new Dictionary<KeyCode, string>();
         ItemsTable = new Dictionary<KeyCode, Items>();
         ModificationTable = new Dictionary<KeyCode, ModifyInventory>();
+        RestrictionsTable = new Dictionary<KeyCode, Items>();
     }
 
     public void SetCommand(KeyCode key, State state, string action)
@@ -45,11 +47,23 @@ public class State
         ActionTable[key] = action;
     }
 
+    public void SetCommand(KeyCode key, State state, string action, Items restriction_item)
+    {
+        this.SetCommand(key, state, action);
+        RestrictionsTable[key] = restriction_item;
+    }
+
     public void SetCommand(KeyCode key, State state, string action, ModifyInventory function, Items item)
     {
         this.SetCommand(key, state, action);
         ModificationTable[key] = function;
         ItemsTable[key] = item;
+    }
+
+    public void SetCommand(KeyCode key, State state, string action, ModifyInventory function, Items item, Items restriction_item)
+    {
+        this.SetCommand(key, state, action, function, item);
+        RestrictionsTable[key] = restriction_item;
     }
 
     public State GetNextState(KeyCode key)
@@ -79,19 +93,13 @@ public class State
         return Items.None;
     }
 
-    public string GetString()
+    public Items GetItemRestriction(KeyCode key)
     {
-        string rval = "";
-        rval += Description;
-        rval += "\n\n[";
-        foreach (KeyCode key in CommandTable.Keys)
+        if (RestrictionsTable.ContainsKey(key))
         {
-            rval += key.ToString() + ": " + ActionTable[key];
-            rval += ", ";
+            return RestrictionsTable[key];
         }
-        rval = rval.Substring(0, rval.Length - 2);
-        rval += "]";
-        return rval;
+        return Items.None;
     }
 }
 
@@ -108,28 +116,26 @@ public class StateManager : MonoBehaviour {
         const string Lock_Text = "Luckily you never travel without a hairpin, unluckily the face of the lock is on the other side of the bars.";
         const string Freedom_Text = "You've made it out of your cell!";
         State cell = new State(Cell_Text);
-        State sheets = new State(Sheets_Text);
+        State sheets_0 = new State(Sheets_Text);
+        State sheets_1 = new State(Sheets_Text);
         State mirror = new State(Mirror_Text);
-        State lockedBars = new State(Lock_Text);
+        State lock_0 = new State(Lock_Text);
+        State lock_1 = new State(Lock_Text);
+        State cell_mirror = new State(Cell_Text);
         State freedom = new State(Freedom_Text);
 
-        cell.SetCommand(KeyCode.S, sheets, "Look at the Sheets");
+        cell.SetCommand(KeyCode.S, sheets_0, "Look at the Sheets");
         cell.SetCommand(KeyCode.M, mirror, "Look at the Mirror");
-        cell.SetCommand(KeyCode.L, lockedBars, "Look at the Lock");
-        sheets.SetCommand(KeyCode.R, cell, "Return to your Cell");
-        lockedBars.SetCommand(KeyCode.R, cell, "Return to your Cell");
-        lockedBars.SetCommand(KeyCode.O, freedom, "Open the lock with the Mirror", PlayerInventory.RemoveItem, Items.Mirror, Items.Mirror);
+        cell.SetCommand(KeyCode.L, lock_0, "Look at the Lock");
+        sheets_0.SetCommand(KeyCode.R, cell, "Return to your Cell");
+        lock_0.SetCommand(KeyCode.R, cell, "Return to your Cell");
         mirror.SetCommand(KeyCode.R, cell, "Return to your Cell");
-<<<<<<< HEAD
-        mirror.SetCommand(KeyCode.T, cell, "Take the Mirror and return to your cell", PlayerInventory.AddItem, Items.Mirror);
-=======
         mirror.SetCommand(KeyCode.T, cell_mirror, "Take the Mirror and return to your cell", PlayerInventory.AddItem, Items.Mirror);
         cell_mirror.SetCommand(KeyCode.S, sheets_1, "Look at the Sheets");
         cell_mirror.SetCommand(KeyCode.L, lock_1, "Look at the Lock");
         sheets_1.SetCommand(KeyCode.R, cell_mirror, "Return to your cell");
         lock_1.SetCommand(KeyCode.R, cell_mirror, "Return to your cell");
-        lock_1.SetCommand(KeyCode.O, freedom, "Open the lock with the Mirror", PlayerInventory.RemoveItem, Items.Mirror );
->>>>>>> parent of 58dc657... Before state machine overhaul
+        lock_1.SetCommand(KeyCode.O, freedom, "Open the lock with the Mirror", PlayerInventory.RemoveItem, Items.Mirror, Items.Mirror );
         freedom.SetCommand(KeyCode.P, cell, "Play again");
 
         CurrentState = cell;
@@ -147,12 +153,16 @@ public class StateManager : MonoBehaviour {
                     State Next = CurrentState.GetNextState(kcode);
                     if (Next != null)
                     {
-                        Items item = CurrentState.GetItem(kcode);
-                        if (item != Items.None)
+                        Items restriction_item = CurrentState.GetItemRestriction(kcode);
+                        if (restriction_item == Items.None || PlayerInventory.IsHeld(restriction_item))
                         {
-                            CurrentState.GetInventoryModification(kcode)(item);
+                            Items item = CurrentState.GetItem(kcode);
+                            if (item != Items.None)
+                            {
+                                CurrentState.GetInventoryModification(kcode)(item);
+                            }
+                            CurrentState = CurrentState.GetNextState(kcode);
                         }
-                        CurrentState = CurrentState.GetNextState(kcode);
                     }
                 }
             }
