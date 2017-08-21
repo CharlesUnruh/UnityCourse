@@ -23,24 +23,6 @@ public class Item
 
 public class Inventory : MonoBehaviour {
 
-    public string Contents
-    {
-        get
-        {
-            string rval = "";
-            foreach (Items item in Enum.GetValues(typeof(Items)))
-            {
-                if (ItemHeld[item])
-                {
-                    rval += item.ToString();
-                    rval += '\n';
-                }
-            }
-            rval = rval.Substring(0, rval.Length - 1);
-            return rval;
-        }
-    }
-
     private Dictionary<Items, bool> ItemHeld;
     private Dictionary<Items, Item> ItemTable;
 
