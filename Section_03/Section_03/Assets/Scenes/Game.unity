@@ -108,6 +108,46 @@ NavMeshSettings:
     tileSize: 256
     accuratePlacement: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &29391460
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 29391462}
+  - component: {fileID: 29391461}
+  m_Layer: 0
+  m_Name: Inventory
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &29391461
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 29391460}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e08746d20cec0f943b61c7f5f08e002c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &29391462
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 29391460}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 699.47284, y: 338.58752, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &42852535
 GameObject:
   m_ObjectHideFlags: 0
@@ -118,6 +158,7 @@ GameObject:
   - component: {fileID: 42852536}
   - component: {fileID: 42852538}
   - component: {fileID: 42852537}
+  - component: {fileID: 42852539}
   m_Layer: 5
   m_Name: Inventory Box
   m_TagString: Untagged
@@ -182,6 +223,19 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 42852535}
+--- !u!114 &42852539
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 42852535}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7521907b2ce1a34409c1bcddecc459b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  text: {fileID: 42852537}
+  PlayerInventory: {fileID: 29391461}
 --- !u!1 &457165843
 GameObject:
   m_ObjectHideFlags: 0
@@ -260,7 +314,6 @@ GameObject:
   - component: {fileID: 996598953}
   - component: {fileID: 996598955}
   - component: {fileID: 996598954}
-  - component: {fileID: 996598957}
   - component: {fileID: 996598956}
   m_Layer: 5
   m_Name: Instruction Box
@@ -337,19 +390,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfb5fd47db8a2324ca76c9704b961835, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  text: {fileID: 1498489944}
+  text: {fileID: 996598954}
   StateManager: {fileID: 1683832031}
---- !u!114 &996598957
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 996598952}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a2aef20d648897b418c4747022aa9a6e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1174768628
 GameObject:
   m_ObjectHideFlags: 0
@@ -651,6 +693,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad2084c0d47d3da47bbd2e2c6aeaf5e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PlayerInventory: {fileID: 29391461}
 --- !u!4 &1683832032
 Transform:
   m_ObjectHideFlags: 0
