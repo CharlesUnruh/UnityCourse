@@ -2,11 +2,27 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
-class State
+public class State
 {
-    private string Description;
+    public string Description { get; private set; }
+    public string Instructions
+    {
+        get
+        {
+            string rval = "";
+            rval += "[";
+            foreach (KeyCode key in CommandTable.Keys)
+            {
+                rval += key.ToString() + ": " + ActionTable[key];
+                rval += ", ";
+            }
+            rval = rval.Substring(0, rval.Length - 2);
+            rval += "]";
+            return rval;
+
+        }
+    }
     private Dictionary<KeyCode, State> CommandTable;
     private Dictionary<KeyCode, string> ActionTable;
 
@@ -49,14 +65,12 @@ class State
     }
 }
 
-public class TextContoller : MonoBehaviour {
+public class StateManager : MonoBehaviour {
 
-    public Text text;
-    private State CurrentState;
-    private bool UpdateText;
+    public State CurrentState { get; private set; }
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
         const string Cell_Text = "You wake up locked in a prison cell, you see a Mirror, some dirty Sheets, and a Locked set of bars.";
         const string Sheets_Text = "These sheets look like they haven't been cleaned in months...";
         const string Mirror_Text = "You look up at the dusty mirror, you reason you could Take it off the wall if you pry hard enough.";
@@ -70,7 +84,6 @@ public class TextContoller : MonoBehaviour {
         State lock_1 = new State(Lock_Text);
         State cell_mirror = new State(Cell_Text);
         State freedom = new State(Freedom_Text);
-        text.text = "Hello World";
 
         cell.SetCommand(KeyCode.S, sheets_0, "Look at the Sheets");
         cell.SetCommand(KeyCode.M, mirror, "Look at the Mirror");
@@ -87,18 +100,10 @@ public class TextContoller : MonoBehaviour {
         freedom.SetCommand(KeyCode.P, cell, "Play again");
 
         CurrentState = cell;
-        UpdateText = true;
-        text.text = "Hello World1";
-
     }
-
-    // Update is called once per frame
-    void Update () {
-        if (UpdateText)
-        {
-            text.text = "Hello World";
-            text.text = CurrentState.GetString();
-        }
+	
+	// Update is called once per frame
+	void Update () {
         if (Input.anyKey)
         {
             foreach (KeyCode kcode in Enum.GetValues(typeof(KeyCode)))
@@ -110,10 +115,9 @@ public class TextContoller : MonoBehaviour {
                     if (Next != null)
                     {
                         CurrentState = CurrentState.GetNextState(kcode);
-                        UpdateText = true;
                     }
                 }
             }
         }
-	}
+    }
 }
