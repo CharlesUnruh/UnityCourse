@@ -25,19 +25,31 @@ public class State
     }
     private Dictionary<KeyCode, State> CommandTable;
     private Dictionary<KeyCode, string> ActionTable;
+    private Dictionary<KeyCode, Items> ItemsTable;
+    public delegate void ModifyInventory(Items item);
+    private Dictionary<KeyCode, ModifyInventory> ModificationTable;
+
 
     public State(string Description)
     {
         this.Description = Description;
         CommandTable = new Dictionary<KeyCode, State>();
         ActionTable = new Dictionary<KeyCode, string>();
+        ItemsTable = new Dictionary<KeyCode, Items>();
+        ModificationTable = new Dictionary<KeyCode, ModifyInventory>();
     }
-
 
     public void SetCommand(KeyCode key, State state, string action)
     {
         CommandTable[key] = state;
         ActionTable[key] = action;
+    }
+
+    public void SetCommand(KeyCode key, State state, string action, ModifyInventory function, Items item)
+    {
+        this.SetCommand(key, state, action);
+        ModificationTable[key] = function;
+        ItemsTable[key] = item;
     }
 
     public State GetNextState(KeyCode key)
@@ -47,6 +59,24 @@ public class State
             return CommandTable[key];
         }
         return null;
+    }
+
+    public ModifyInventory GetInventoryModification(KeyCode key)
+    {
+        if (ModificationTable.ContainsKey(key))
+        {
+            return ModificationTable[key];
+        }
+        return null;
+    }
+
+    public Items GetItem(KeyCode key)
+    {
+        if (ItemsTable.ContainsKey(key))
+        {
+            return ItemsTable[key];
+        }
+        return Items.None;
     }
 
     public string GetString()
@@ -68,6 +98,7 @@ public class State
 public class StateManager : MonoBehaviour {
 
     public State CurrentState { get; private set; }
+    public Inventory PlayerInventory;
 
     // Use this for initialization
     void Start () {
@@ -91,12 +122,12 @@ public class StateManager : MonoBehaviour {
         sheets_0.SetCommand(KeyCode.R, cell, "Return to your Cell");
         lock_0.SetCommand(KeyCode.R, cell, "Return to your Cell");
         mirror.SetCommand(KeyCode.R, cell, "Return to your Cell");
-        mirror.SetCommand(KeyCode.T, cell_mirror, "Take the Mirror and return to your cell");
+        mirror.SetCommand(KeyCode.T, cell_mirror, "Take the Mirror and return to your cell", PlayerInventory.AddItem, Items.Mirror);
         cell_mirror.SetCommand(KeyCode.S, sheets_1, "Look at the Sheets");
         cell_mirror.SetCommand(KeyCode.L, lock_1, "Look at the Lock");
         sheets_1.SetCommand(KeyCode.R, cell_mirror, "Return to your cell");
         lock_1.SetCommand(KeyCode.R, cell_mirror, "Return to your cell");
-        lock_1.SetCommand(KeyCode.O, freedom, "Open the lock with the Mirror");
+        lock_1.SetCommand(KeyCode.O, freedom, "Open the lock with the Mirror", PlayerInventory.RemoveItem, Items.Mirror );
         freedom.SetCommand(KeyCode.P, cell, "Play again");
 
         CurrentState = cell;
@@ -114,6 +145,11 @@ public class StateManager : MonoBehaviour {
                     State Next = CurrentState.GetNextState(kcode);
                     if (Next != null)
                     {
+                        Items item = CurrentState.GetItem(kcode);
+                        if (item != Items.None)
+                        {
+                            CurrentState.GetInventoryModification(kcode)(item);
+                        }
                         CurrentState = CurrentState.GetNextState(kcode);
                     }
                 }
