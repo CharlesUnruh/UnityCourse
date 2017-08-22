@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2017
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Point_And_Click_Tutorial", "Point_And_Click_Tutorial.csproj", "{3FD5DFCA-9581-0E61-B266-0A9DD27231ED}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Point_And_Click_Tutorial.Editor", "Point_And_Click_Tutorial.Editor.csproj", "{B97C9E9F-79AE-4F02-BF7B-7DD53740F25D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3FD5DFCA-9581-0E61-B266-0A9DD27231ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3FD5DFCA-9581-0E61-B266-0A9DD27231ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3FD5DFCA-9581-0E61-B266-0A9DD27231ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3FD5DFCA-9581-0E61-B266-0A9DD27231ED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B97C9E9F-79AE-4F02-BF7B-7DD53740F25D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B97C9E9F-79AE-4F02-BF7B-7DD53740F25D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B97C9E9F-79AE-4F02-BF7B-7DD53740F25D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B97C9E9F-79AE-4F02-BF7B-7DD53740F25D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
